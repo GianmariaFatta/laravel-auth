@@ -16,10 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// ROTTE OSPITI
 Route::get('/',[GuestHomeController::class, 'index']);
 
+
+// ROTTE PROTETTE
 Route::middleware(['auth', 'verified'])->name('admin.')->prefix('admin')->group(function () {
+    // ROTTE UTENTE LOGGATO
     Route::get('/', [AdminHomeController::class, 'index'])->name('home');
+
+    // ROTTE POST
+     Route::resource('projects',ProjectController::Class);
+
 });
 
 
