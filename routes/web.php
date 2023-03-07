@@ -3,6 +3,7 @@
 use App\Http\Controllers\Guest\HomeController as GuestHomeController; 
 use App\Http\Controllers\Admin\HomeController as  AdminHomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\admin\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,7 +27,7 @@ Route::middleware(['auth', 'verified'])->name('admin.')->prefix('admin')->group(
     Route::get('/', [AdminHomeController::class, 'index'])->name('home');
 
     // ROTTE POST
-     Route::resource('projects',ProjectController::Class);
+     Route::resource('projects', ProjectController::class);
 
 });
 
