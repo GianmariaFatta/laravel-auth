@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class ProjectController extends Controller
 {
@@ -25,8 +26,8 @@ class ProjectController extends Controller
     public function create()
     {
 
-        
-        return view('admin.projects.create');
+        $project = new Project();
+        return view('admin.projects.create',compact('project'));
     }
 
     /**
@@ -37,7 +38,7 @@ class ProjectController extends Controller
         $data= $request->all();
         $request->validate([
         'title'=>'required|string|',
-        'description'=>'|string|',
+        'description'=>'required|string|',
         'thumb'=>'nullable|url|',
         
         ]);
@@ -52,8 +53,7 @@ class ProjectController extends Controller
 
         $project->save();
 
-        return to_route('admin.projects.show', $project->id)->with('message', "Nuovo progetto creato con successo")
-        ->with('type', 'success');
+        return to_route('admin.projects.index');
     }
 
     /**
@@ -67,10 +67,10 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Project $project)
+    public function edit(string $id)
     {
        
-
+        $project= Project::findorfail($id);
         return view('admin.projects.edit', compact('project'));
     }
 
@@ -79,7 +79,21 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $data= $request->all();
+        $request->validate([
+        'title'=>['required', 'string', Rule::unique('projects')->ignore($project->id)],
+        'description'=>'|string|',
+        'thumb'=>'nullable|url|',
+        
+        ]);
+
+      
+        
+        $data['slug']=Str::slug($data['title'], '-');
+
+        $project->update($data);
+
+        return to_route('admin.projects.show', $project->id)->with('type', 'success')->with('message','Progetto modificato con successo');
     }
 
     /**
