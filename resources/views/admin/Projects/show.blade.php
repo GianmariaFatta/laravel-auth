@@ -18,8 +18,25 @@
         <hr>
         <div class="d-flex justify-content-end">
             <a class='btn btn-success' href="{{ route('admin.projects.index') }}">Torna ai progetti</a>
+            <form method='POST' action="{{ route('admin.projects.destroy', $project->id) }}" class='delete-form'>
+                @csrf
+                @method('DELETE')
+                <button type='submit' class='btn btn-small btn-danger ms-2'>Elimina</button>
+            </form>
         </div>
     </div>
 
 
+@endsection
+@section('script')
+    <script>
+        const deleteButtons = document.querySelectorAll('.delete-form');
+        deleteButtons.forEach(button => {
+            button.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const confirm = window.confirm(`sei sicuro di voler eliminare questo elemento?`);
+                if (confirm) button.submit();
+            });
+        });
+    </script>
 @endsection

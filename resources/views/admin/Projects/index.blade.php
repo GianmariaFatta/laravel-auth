@@ -31,7 +31,8 @@
                     <td>{{ $project->updated_at }}</td>
                     <td class='d-flex justify-content-center align-items-center'>
                         <a class='btn btn-small btn-primary' href="{{ route('admin.projects.show', $project->id) }}">Vedi</a>
-                        <form method='POST' action="{{ route('admin.projects.destroy', $project->id) }}">
+                        <form method='POST' action="{{ route('admin.projects.destroy', $project->id) }}"
+                            class='delete-form'>
                             @csrf
                             @method('DELETE')
                             <button type='submit' class='btn btn-small btn-danger ms-2'>Elimina</button>
@@ -45,4 +46,17 @@
             @endforelse
         </tbody>
     </table>
+@endsection
+
+@section('script')
+    <script>
+        const deleteButtons = document.querySelectorAll('.delete-form');
+        deleteButtons.forEach(button => {
+            button.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const confirm = window.confirm(`sei sicuro di voler eliminare questo elemento?`);
+                if (confirm) button.submit();
+            });
+        });
+    </script>
 @endsection
