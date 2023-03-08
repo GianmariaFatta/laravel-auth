@@ -13,10 +13,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-       $user = new User();
-       $user->email= 'jimmy@boolean.it';
-       $user->password= bcrypt('password');
+    //    $user = new User();
+    //    $user->email= 'jimmy@boolean.it';
+    //    $user->password= bcrypt('password');
 
-       $user->save();
+    //    $user->save();
     }
 }
