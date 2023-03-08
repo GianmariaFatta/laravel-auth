@@ -32,6 +32,9 @@
                     <td class='d-flex justify-content-center align-items-center'>
                         <a class='btn btn-small btn-primary'
                             href="{{ route('admin.projects.show', $project->id) }}">Vedi</a>
+                        <a class='btn btn-warning ms-2 text-white'
+                            href="{{ route('admin.projects.edit', $project->id) }}">Modifica
+                            progetto</a>
                         <form method='POST' action="{{ route('admin.projects.destroy', $project->id) }}"
                             class='delete-form'>
                             @csrf

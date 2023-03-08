@@ -17,6 +17,12 @@
         </div>
         <hr>
         <div class="d-flex justify-content-end">
+
+            <a class='btn btn-warning me-2 text-white' href="{{ route('admin.projects.edit', $project->id) }}">Modifica
+                progetto</a>
+
+
+
             <a class='btn btn-success' href="{{ route('admin.projects.index') }}">Torna ai progetti</a>
             <form method='POST' action="{{ route('admin.projects.destroy', $project->id) }}" class='delete-form'>
                 @csrf
