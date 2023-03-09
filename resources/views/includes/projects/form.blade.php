@@ -8,10 +8,11 @@
       </div>
   @endif
   @if ($project->exists)
-      <form action="{{ route('admin.projects.update', $project->id) }}" method='POST' novalidate>
+      <form action="{{ route('admin.projects.update', $project->id) }}" method='POST' enctype='multipart/form-data'
+          novalidate>
           @method('PUT')
       @else
-          <form action="{{ route('admin.projects.store') }}" method='POST' novalidate>
+          <form action="{{ route('admin.projects.store') }}" method='POST' enctype='multipart/form-data' novalidate>
   @endif
 
   @csrf
@@ -32,15 +33,22 @@
               <div class='text-muted'>Inserisci il titolo</div>
           </div>
       </div>
-      <div class="col-md-10">
+  </div>
+  <div class="row">
+      <div class="col-10">
           <div class="mb-3">
               <label for="thumb" class="form-label">Immagine</label>
-              <input type="url" class="form-control" id="thumb" name='thumb'
+              <input type="file" class="form-control" id="thumb" name='thumb'
                   value='{{ old('thumb', $project->thumb) }}' required>
               <div class='text-muted'>Inserisci l'url dell'immagine</div>
           </div>
-
       </div>
+      <div class="col-2">
+          <img id='thumb-preview' class='img-fluid'
+              src="{{ $project->thumb ? asset('storage/' . $project->thumb) : 'https://marcolanci.it/utils/placeholder.jpg' }}"
+              alt="">
+      </div>
+
       <div class="row">
 
 
@@ -66,5 +74,22 @@
               titleInput.addEventListener('blur', () => {
                   slugInput.value = titleInput.value.toLowerCase().split(' ').join('-');
               });
+          </script>
+          <script>
+              const placeholder = 'https://marcolanci.it/utils/placeholder.jpg';
+
+              const thumbInput = document.getElementById('thumb');
+              const thumbPreview = document.getElementById('thumb-preview');
+
+              thumbInput.addEventListener('change', () => {
+                  if (thumbInput.files && thumbInput.files[0]) {
+                      const reader = new FileReader();
+                      reader.readAsDataURL(thumbInput.files[0]);
+
+                      reader.onload = e => {
+                          thumbPreview.src = e.target.result;
+                      }
+                  } else thumbPreview.src = placeholder;
+              })
           </script>
       @endsection

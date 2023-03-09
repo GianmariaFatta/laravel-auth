@@ -8,7 +8,10 @@
     </header>
     <div class="clearfix">
         @if ($project->thumb)
-            <img class='me-4 float-start' src="{{ $project->thumb }}" alt="{{ $project->title }}">
+            <div class="d-flex justify-content-center ">
+                <img class='me-4 float-start w-25 h-25' src="{{ asset('storage/' . $project->thumb) }}"
+                    alt="{{ $project->title }}">
+            </div>
         @endif
         <p>{{ $project->description }}</p>
         <div>

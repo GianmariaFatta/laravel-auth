@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -39,13 +40,19 @@ class ProjectController extends Controller
         $request->validate([
         'title'=>'required|string|',
         'description'=>'required|string|',
-        'thumb'=>'nullable|url|',
+        'thumb'=>'nullable|image|mimes:jpeg,jpg,png,svg',
         
         ]);
 
         $project = new Project();
         
         $data['slug']=Str::slug($data['title'], '-');
+
+        if(array_key_exists('thumb', $data)){
+          $img_url =  Storage::put('projects',$data['thumb'] );
+          $data['thumb']=$img_url;
+        };
+
 
         $project->fill($data);
 
@@ -83,13 +90,19 @@ class ProjectController extends Controller
         $request->validate([
         'title'=>['required', 'string', Rule::unique('projects')->ignore($project->id)],
         'description'=>'|string|',
-        'thumb'=>'nullable|url|',
+        'thumb'=>'nullable|image|mimes:jpeg,jpg,png,svg',
         
         ]);
 
       
         
         $data['slug']=Str::slug($data['title'], '-');
+
+        if(array_key_exists('thumb', $data)){
+            if($project->thumb) Storage::delete($project->thumb);
+            $img_url =  Storage::put('projects',$data['thumb'] );
+            $data['thumb'] = $img_url;
+          };
 
         $project->update($data);
 
@@ -102,6 +115,9 @@ class ProjectController extends Controller
     public function destroy(string $id)
     {
         $project = Project::findOrFail($id);
+
+        if($project->thumb)Storage::delete($project->thumb);
+
         $project->delete();
         return to_route('admin.projects.index')
             ->with('message', "Il progetto '$project->title' è stato eliminato con successo")
